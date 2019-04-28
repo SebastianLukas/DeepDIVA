@@ -1,5 +1,6 @@
 # Chinko Group
-# based on
+#
+# Based on
 # Author:   Kazuto Nakashima
 # URL:      http://kazuto1011.github.io
 # Created:  2017-05-18

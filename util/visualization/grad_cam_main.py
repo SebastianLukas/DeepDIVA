@@ -1,8 +1,22 @@
 # Chinko Group
-# based on
+#
+# Based on
 # Author:   Kazuto Nakashima
 # URL:      http://kazuto1011.github.io
-# Created:  2017-05-18
+# Created:  2017-05-
+
+# This Gradcam is tested to work with resnet architectures
+# Usage
+# python grad_cam_main.py --params as following
+# parser.add_argument('--images_path', default='/grad_cam_testset/', type=str, help='imagefolder path')
+# parser.add_argument('--output_path', default='/', type=str, help='output imagefolder path')
+# parser.add_argument('--model_path', default='/model/model_best.pth.tar', type=str, help='model path')
+# parser.add_argument('--arch', default='resnet152', type=str, help='resnet architecture name, eg resnet152 resnet50')
+# parser.add_argument('--gpu_id', default='3', type=str, help='1,2')
+# parser.add_argument('--test', default='test', type=str, help='test name')
+# parser.add_argument('--topk', default=1, type=int, help='number of first top results')
+# parser.add_argument('--n_classes', default=8, type=int, help='number of classes')
+# parser.add_argument('--layer', default='module.layer4.2', type=str, help='name layer eg. module.layer4.2 or layer4.2 - inspect layer names of model to load if unsure')
 
 from __future__ import print_function
 
@@ -34,7 +48,7 @@ def save_gradient(filename, data, output_path):
     directory = os.path.dirname(path)
     if not os.path.exists(directory):
         os.makedirs(directory)
-    cv2.imwrite((path), np.uint8(data))
+    cv2.imwrite(path, np.uint8(data))
 
 
 def save_gradcam(filename, gcam, raw_image, output_path):
@@ -57,16 +71,16 @@ model_names = sorted(
     if name.islower() and not name.startswith("__") and callable(models.__dict__[name])
 )
 
-parser = argparse.ArgumentParser(description='Pytorch Cell Classification weight upload')
+parser = argparse.ArgumentParser(description='GradCam Visualisations')
 parser.add_argument('--images_path', default='/grad_cam_testset/', type=str, help='imagefolder path')
-parser.add_argument('--output_path', default='/', type=str, help='imagefolder path')
+parser.add_argument('--output_path', default='/', type=str, help='output imagefolder path')
 parser.add_argument('--model_path', default='/model/model_best.pth.tar', type=str, help='model path')
-parser.add_argument('--arch', default='resnet152', type=str, help='resnet model arch')
+parser.add_argument('--arch', default='resnet152', type=str, help='resnet architecture name, eg resnet152 resnet50')
 parser.add_argument('--gpu_id', default='3', type=str, help='1,2')
-parser.add_argument('--test', default='3', type=str, help='1,2')
-parser.add_argument('--topk', default=1, type=int, help='3')
-parser.add_argument('--n_classes', default=8, type=int, help='3')
-parser.add_argument('--layer', default='module.layer4.2', type=str, help='3')
+parser.add_argument('--test', default='test', type=str, help='test name')
+parser.add_argument('--topk', default=1, type=int, help='number of first top results')
+parser.add_argument('--n_classes', default=8, type=int, help='number of classes')
+parser.add_argument('--layer', default='module.layer4.2', type=str, help='name layer eg. module.layer4.2 or layer4.2 - inspect layer names of model to load if unsure')
 args = parser.parse_args()
 
 
