@@ -9,7 +9,7 @@
 # Usage
 # python grad_cam_main.py --params as following
 # parser.add_argument('--images_path', default='/grad_cam_testset/', type=str, help='imagefolder path')
-# parser.add_argument('--output_path', default='/', type=str, help='output imagefolder path')
+# parser.add_argument('--output_path', default='/output/', type=str, help='output imagefolder path')
 # parser.add_argument('--model_path', default='/model/model_best.pth.tar', type=str, help='model path')
 # parser.add_argument('--arch', default='resnet152', type=str, help='resnet architecture name, eg resnet152 resnet50')
 # parser.add_argument('--gpu_id', default='3', type=str, help='1,2')
@@ -34,7 +34,7 @@ from os import listdir
 from grad_cam import (BackPropagation, Deconvolution, GradCAM, GuidedBackPropagation)
 #from grad_cam import (resnet50, resnet152)
 
-script_dir = os.path.dirname(__file__)
+
 
 def to_var(image):
     return Variable(image.unsqueeze(0), volatile=False, requires_grad=True)
@@ -72,9 +72,9 @@ model_names = sorted(
 )
 
 parser = argparse.ArgumentParser(description='GradCam Visualisations')
-parser.add_argument('--images_path', default='/grad_cam_testset/', type=str, help='imagefolder path')
-parser.add_argument('--output_path', default='/', type=str, help='output imagefolder path')
-parser.add_argument('--model_path', default='/model/model_best.pth.tar', type=str, help='model path')
+parser.add_argument('--images_path', default='grad_cam_testset/', type=str, help='image folder - relative path to the script')
+parser.add_argument('--output_path', default='output/', type=str, help='output folder - relative path to the script')
+parser.add_argument('--model_path', default='model/model_best.pth.tar', type=str, help='model checkpoint - relative path to the script')
 parser.add_argument('--arch', default='resnet152', type=str, help='resnet architecture name, eg resnet152 resnet50')
 parser.add_argument('--gpu_id', default='3', type=str, help='1,2')
 parser.add_argument('--test', default='test', type=str, help='test name')
@@ -85,6 +85,7 @@ args = parser.parse_args()
 
 
 def main():
+    script_dir = os.getcwd()
     image_path = os.path.join(script_dir, args.images_path)
     model_path = os.path.join(script_dir, args.model_path)
     output_path = os.path.join(script_dir, args.output_path)
@@ -96,6 +97,8 @@ def main():
     layer = args.layer
     os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu_id
 
+    print('Script dir:', script_dir)
+    print('Image path:', image_path)
     images = [join(dp, f) for dp, dn, filenames in os.walk(image_path) for f in filenames]
 
     cuda = cuda and torch.cuda.is_available()
